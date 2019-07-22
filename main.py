@@ -1,17 +1,34 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://booklist:readingrainbow@localhost:8889/booklist'
+app.config['SQLALCHEMY_ECHO']= True
+db = SQLAlchemy(app)
 
-@app.route("/")
+class Book(db.Model):
+
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(120))
+    author= db.Column(db.String(120))
+
+    def __init__(self, title, author):
+        self.title =  title
+        self.author = author
+
+books= []
+
+
+@app.route('/', methods=['POST', 'GET'])
 def index():
-    return render_template('bookForm.html')
+    if request.method == 'POST':
+        book = request.form['book_title']
+        books.append(book)
 
-@app.route("/hello", methods=['POST'])
-def hello():
-    book_title = request.form['book_title']
-    return '<h1> Enjoy reading ' + book_title + '! </h1>'
+    return render_template('bookForm.html', title="BookList", books=books)
+
 
     
-    
-app.run()
+if __name__ == '__main__': 
+    app.run()

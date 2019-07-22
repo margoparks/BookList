@@ -1,16 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title> Book List</title>
-</head>
-<body>
-    <form action="/hello" method="POST">
-        <label for="book_title"> Book Title </label>
-        <input id="book_title" type ="text" name="book_title" />
-        <input type="submit" />
-    </form>
+{% extends "base.html" %}
+
+{% block content %}
+    <h1> Book List </h1>
+    <form action="/" method="POST">
+        <label for="book_title"> Title </label>
+        <input id="book_title" type ="text" name="book_title" required />
+        <label for="book_author"> Author </label>
+        <input id="book_author" type="text" name= "book_author"  />     
+        <input type="submit" value="Add Book!" />
+    </form> 
+
+    <hr />
+
+    {% if books|length == 0 %}
+    <p> Your Book List is currently empty</p>
+    {% else %}
+
+        <ul>
+            {% for book in books %}
+            <li> {{book}} </li>
+            {% endfor %}
+        </ul>
+
+    {% endif %}
+    {% endblock %}
+
+
 </body>
-</html>
+</html> 
