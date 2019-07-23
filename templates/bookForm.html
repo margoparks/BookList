@@ -18,11 +18,27 @@
 
         <ul>
             {% for book in books %}
-            <li> {{book}} </li>
+            <li> {{book.title}} by {{book.author}} 
+                <form method="POST" action="/remove-book" style="display: inline-block">
+                    <input type="hidden" name="book-id" value="{{book.id}}" />
+                    <input type ="submit" value ="Read It!" />
+                    
+                </form>
+            </li>
             {% endfor %}
         </ul>
 
     {% endif %}
+
+    <hr />
+
+    <h2> Completed Reading </h2>
+        <ul>
+            {% for book in completed_books %}
+            <li> {{book.title}} by {{book.author}}</li>
+            {% endfor %}
+        </ul>
+
     {% endblock %}
 
 
