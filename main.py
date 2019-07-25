@@ -19,6 +19,16 @@ class Book(db.Model):
         self.author = author
         self.completed = False
 
+class User(db.Model):
+
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(60), unique = True)
+    password = db.Column(db.String(60))
+
+    def __init__(self, email, password):
+        self.email = email
+        self.password = password
+
 @app.route('/', methods=['POST', 'GET'])
 def index():
 
@@ -44,6 +54,47 @@ def remove_book():
     db.session.commit()
 
     return redirect('/')
+
+@app.route('/login', methods = ['POST', 'GET'])
+def login():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        user = User.query.filter_by(email = email).first()
+        if user and user.password == password:
+            # TODO - remember the user has logged in with session
+            return redirect('/')
+        else:
+            # TODO explain why login has failed
+            pass
+            return '<h3> Error </h3>'
+
+
+    return render_template('login.html', title="Log In")
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        verify = request.form['verify']
+
+        #TODO - validate user's info
+        existing_user = user = User.query.filter_by(email = email).first()
+        if not existing_user:
+            new_user = User(email, password)
+            db.session.add(new_user)
+            db.session.commit()
+            # TODO remember the new user with sessions
+            return redirect('/')
+        else:
+            # TODO - better error message for user
+            return '<h3> Duplicate User </h3>'
+
+
+    return render_template('register.html', title="Register")
+
 
     
 
